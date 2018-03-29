@@ -187,4 +187,4 @@ class TwentyFortyEight:
     
 
 
-poc_2048_gui.run_gui(TwentyFortyEight(2, 2))
+poc_2048_gui.run_gui(TwentyFortyEight(4, 4))
