@@ -57,18 +57,18 @@ class TwentyFortyEight:
     """
 
     def __init__(self, grid_height, grid_width):
-        self.grid_height = grid_height
-        self.grid_width = grid_width
-        self.my_grid = []
+        self._grid_height = grid_height
+        self._grid_width = grid_width
+        self._grid = []
         self.reset()
-        self.limits = {UP : self.grid_height,
-                         DOWN :self.grid_height,
-                         LEFT : self.grid_width,
-                         RIGHT : self.grid_width}
-        self.border_index = {UP: [(0,col)for col in range(self.grid_width)] ,
-                            DOWN: [(self.grid_height-1,col)for col in range(self.grid_width)],
-                            LEFT: [(row,0)for row in range(self.grid_height)],
-                            RIGHT: [(row,self.grid_width-1)for row in range(self.grid_height)]}
+        self._limits = {UP : self._grid_height,
+                         DOWN :self._grid_height,
+                         LEFT : self._grid_width,
+                         RIGHT : self._grid_width}
+        self._indices = {UP: [(0,col)for col in range(self._grid_width)] ,
+                            DOWN: [(self._grid_height-1,col)for col in range(self._grid_width)],
+                            LEFT: [(row,0)for row in range(self._grid_height)],
+                            RIGHT: [(row,self._grid_width-1)for row in range(self._grid_height)]}
 
     def reset(self):
         """
@@ -76,13 +76,13 @@ class TwentyFortyEight:
         initial tiles.
         """
         # create a new board of HEIGHT X WIDTH dimensions
-        self.my_grid = [[0 for dummy_col in range(self.grid_width)] for dummy_row in range(self.grid_height)]
+        self._grid = [[0 for dummy_col in range(self._grid_width)] 
+                      for dummy_row in range(self._grid_height)]
         
         # add 2 initial tiles
         self.new_tile()
         self.new_tile()
         
-        return self.my_grid
 
     def __str__(self):
         """
@@ -91,8 +91,8 @@ class TwentyFortyEight:
         string_board = ""
         
         # iterates the board and add each row as a new character of the string
-        for dummy_index in range(self.grid_height):
-            string_board += str(self.my_grid[dummy_index][0:self.grid_width]) + "\n"
+        for dummy_index in range(self._grid_height):
+            string_board += str(self._grid[dummy_index][0:self._grid_width]) + "\n"
             
         return string_board
 
@@ -100,13 +100,13 @@ class TwentyFortyEight:
         """
         Get the height of the board.
         """
-        return self.grid_height
+        return self._grid_height
 
     def get_grid_width(self):
         """
         Get the width of the board.
         """
-        return self.grid_width
+        return self._grid_width
     
     def make_list(self , start , direction , steps):
         """
@@ -116,7 +116,7 @@ class TwentyFortyEight:
         for step in range(steps):
             row = start[0] + step * direction[0]
             col = start[1] + step * direction[1]
-            new_list.append(self.my_grid[row][col])
+            new_list.append(self._grid[row][col])
         return new_list
     
     def modify(self , start , direction , steps , merged):
@@ -126,7 +126,7 @@ class TwentyFortyEight:
         for step in range(steps):
             row = start[0] + step * direction[0]
             col = start[1] + step * direction[1]
-            self.my_grid[row][col] = merged[step]
+            self._grid[row][col] = merged[step]
 
     def move(self, direction):
         """
@@ -135,9 +135,9 @@ class TwentyFortyEight:
         """
         
         changed = False
-        steps = self.limits[direction]
+        steps = self._limits[direction]
         
-        for dummy_index in self.border_index[direction]:
+        for dummy_index in self._indices[direction]:
             temp_list = self.make_list(dummy_index, OFFSETS[direction], steps)
             merged = merge(temp_list)
             if temp_list != merged :
@@ -154,13 +154,13 @@ class TwentyFortyEight:
         """
          
         # randomly selects a row and a column
-        random_col = random.randrange(self.grid_width)
-        random_row = random.randrange(self.grid_height)
+        random_col = random.randrange(self._grid_width)
+        random_row = random.randrange(self._grid_height)
         
         # if the square isn't empty, repeat the process until an empty one is selected
-        while self.my_grid[random_row][random_col] != 0:
-            random_col = random.randrange(self.grid_width)
-            random_row = random.randrange(self.grid_height)
+        while self._grid[random_row][random_col] != 0:
+            random_col = random.randrange(self._grid_width)
+            random_row = random.randrange(self._grid_height)
         
         # randomly select a number between 0 and 9
         random_tile = random.randrange(10) 
@@ -168,22 +168,23 @@ class TwentyFortyEight:
         # if the number is 9, the new tile's value is 4 (10% of the times)
         # in other case the new tile's value is 2 (90% of the times)
         if random_tile == 9:
-            self.my_grid[random_row][random_col] = 4
+            self._grid[random_row][random_col] = 4
         else:
-            self.my_grid[random_row][random_col] = 2
+            self._grid[random_row][random_col] = 2
         
 
     def set_tile(self, row, col, value):
         """
         Set the tile at position row, col to have the given value.
         """
-        self.my_grid[row][col] = value
+        self._grid[row][col] = value
 
     def get_tile(self, row, col):
         """
         Return the value of the tile at position row, col.
         """
-        return self.my_grid[row][col]
+        return self._grid[row][col]
     
 
-poc_2048_gui.run_gui(TwentyFortyEight(4, 4))
+
+poc_2048_gui.run_gui(TwentyFortyEight(2, 2))
